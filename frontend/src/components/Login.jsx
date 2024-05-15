@@ -3,11 +3,15 @@ import { Link } from 'react-router-dom'
 import Axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import PageHeading from './PageHeading';
+import Alert from './Alert.jsx'
 
-const Login = () => {
+function Login() {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [alertMsg, setAlertMsg] = useState('')
+    const [alertType, setAlertType] = useState('')  // success or warning
+
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -25,9 +29,13 @@ const Login = () => {
             }
 
             console.log('Logged in successfully - fe', response.data)
+            setAlertType('success')
+            setAlertMsg("Login successful !")
 
         } catch (error) {
             console.error('Login failed', error.message)
+            setAlertType('warning')
+            setAlertMsg("Login Failed : " + error)
             // Handle error (e.g., show error message to user)
         }
     };
@@ -37,6 +45,7 @@ const Login = () => {
 
 
             <PageHeading>Login</PageHeading>
+            <Alert message={alertMsg} type={alertType}></Alert>
 
 
             <div className="mb-5">
