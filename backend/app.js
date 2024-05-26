@@ -7,6 +7,7 @@ const homeRouter = require('./routes/homeRouter')
 const adminRouter = require('./routes/adminRouter')
 const swipeRouter = require('./routes/swipeRouter')
 const utilRouter = require('./routes/utilRouter')
+const emailRouter = require('./routes/emailRouter')
 const cookieParser = require('cookie-parser')
 const PORT = process.env.PORT
 const cors = require('cors')
@@ -42,3 +43,5 @@ app.use('/swipe', swipeRouter)
 app.use('/', utilRouter) 
 
 app.use('/admin', adminRouter)  // For testing purposes  // can make a admin dashboard in future
+
+app.use('/email', emailRouter)
