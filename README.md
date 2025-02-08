@@ -2,6 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+![Home Page](./src/assets/readme/home.png)
+
 A community-driven platform for peer-to-peer skill exchange with real-time collaboration features.
 This is an enhanced fork of [Skill Swap](https://github.com/Wellitsabhi/Skillswap) with added realtime chat and improved matching features.
 
@@ -52,10 +54,14 @@ The original platform stopped at the matching stage, leaving users without a bui
 
 ### Register
 
+![Registration Page](./src/assets/readme/register.png)
+
 1. Open the app and click on the 'Get started' button.
 2. Fill in the required details and create your account.
 
 ### Profile Setup
+
+![Profile Page](./src/assets/readme/profile.png)
 
 1. After registration, log in to your account.
 2. Navigate to the 'Profile' section.
@@ -63,10 +69,15 @@ The original platform stopped at the matching stage, leaving users without a bui
 
 ### Finding a Match
 
+![Swipe Interface](./src/assets/readme/swipe.png)
+
 1. Use the `swipe` functionality to find users with the skills you're interested in.
 2. Browse profiles and send connection requests to potential matches.
 
 ### Skill Exchange
+
+![Matches Page](./src/assets/readme/matches.png)
+![Matched Users](./src/assets/readme/matched.png)
 
 1. Once connected, you can find contact info in `matches` section, arrange a skill exchange session.
 2. Give feedback to us after the session to help improve the community.
@@ -99,10 +110,7 @@ The original platform stopped at the matching stage, leaving users without a bui
 
 ### Testing the Chat Feature
 
-3. Register two different accounts (doesn't have to be real emails)
-4. Open two browser windows and log in with each account
-5. Match the users through the swipe interface
-6. Start chatting in real-time (if for some reason the app doesn't load, refresh the page - may need to fix the redux state issue)
+![Chat Interface](./src/assets/readme/chat.gif) 3. Register two different accounts (doesn't have to be real emails) 4. Open two browser windows and log in with each account 5. Match the users through the swipe interface 6. Start chatting in real-time (if for some reason the app doesn't load, refresh the page - may need to fix the redux state issue)
 
 ## Future Features
 
