@@ -99,7 +99,7 @@ const UserProfileCard = ({ currProfile, currentUser, showNext }) => {
                         <span className="text-sm text-gray-500 mb-3">Skills</span>
                         <div className="flex flex-wrap justify-left">
                             {currProfile.skills.map((element, key) => {
-                                return <label key={key} className={getHighlightClass(element, currentUser?.skills)}>{element}</label>
+                                return <label key={key} className={getHighlightClass(element, currentUser?.interests)}>{element}</label>
                             })}
                         </div>
                     </div>
@@ -108,7 +108,7 @@ const UserProfileCard = ({ currProfile, currentUser, showNext }) => {
                         <span className="text-sm text-gray-500 mb-3">Interests</span>
                         <div className="flex flex-wrap justify-left">
                             {currProfile.interests.map((element, key) => {
-                                return <label key={key} className={getHighlightClass(element, currentUser?.interests)}>{element}</label>
+                                return <label key={key} className={getHighlightClass(element, currentUser?.skills)}>{element}</label>
                             })}
                         </div>
                     </div>

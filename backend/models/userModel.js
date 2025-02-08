@@ -60,7 +60,8 @@ const userSchema = new mongoose.Schema(
     ],
     notifications: [
       {
-        type: String,
+        message: { type: String, required: true },
+        read: { type: Boolean, default: false },
       },
     ],
     profilePic: {

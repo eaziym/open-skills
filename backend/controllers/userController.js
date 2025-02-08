@@ -411,6 +411,41 @@ const uploadProfilePic = async (req, res) => {
   }
 };
 
+/**
+ * Mark all notifications as read.
+ * This controller expects the authCheck middleware to have attached the user ID to req.user.
+ */
+const markAllReadNotifications = async (req, res) => {
+  try {
+    // Retrieve the logged-in user
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    // If there are no notifications, exit early.
+    if (!user.notifications || user.notifications.length === 0) {
+      return res.status(200).json({ message: "No notifications available." });
+    }
+
+    // Mark each notification as read, if not already.
+    user.notifications.forEach((notification, index) => {
+      if (!notification.read) {
+        user.notifications[index].read = true;
+      }
+    });
+
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ message: "All notifications marked as read." });
+  } catch (error) {
+    console.error("Error marking notifications as read:", error);
+    return res.status(500).json({ message: "Internal server error." });
+  }
+};
+
 module.exports = {
   registerUser,
   viewProfile,
@@ -423,4 +458,5 @@ module.exports = {
   getNotifications,
   uploadProfilePic,
   upload,
+  markAllReadNotifications,
 };

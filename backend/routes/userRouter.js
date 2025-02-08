@@ -11,6 +11,7 @@ const {
   logout,
   getNotifications,
   uploadProfilePic,
+  markAllReadNotifications,
   upload,
 } = require("../controllers/userController");
 const { authCheck } = require("../middlewares/authCheck");
@@ -34,5 +35,8 @@ router.post(
   upload.single("profilePic"),
   uploadProfilePic
 );
+
+// Route for marking all notifications as read
+router.patch("/notifications/markAllRead", authCheck, markAllReadNotifications);
 
 module.exports = router;

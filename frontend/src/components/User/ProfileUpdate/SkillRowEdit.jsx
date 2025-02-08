@@ -5,40 +5,47 @@ import CloseIcon from '../../../assets/CloseIcon.jsx'
 
 export default function SkillRowEdit({ dataType, dataVal, preSaveUserData, setPreSaveUserData }) {
     const [includedSkills, setIncludedSkills] = useState([...dataVal])
-    const [excludedSkills, setExcludedSkills] = useState()
+    const [excludedSkills, setExcludedSkills] = useState([])
     const keyValPairCss = "w-full flex justify-between my-5"
 
     useEffect(() => {
         const fetchSkills = async () => {
-            const response = await Axios.get(`${import.meta.env.VITE_BACKEND_URL}skills`)
-            const dataValIds = dataVal.map(skill => skill._id)
-            let otherSkills = response.data.filter(thisSkill => !dataValIds.includes(thisSkill._id))
-            console.log(dataType, otherSkills)
-            setExcludedSkills(otherSkills)
+            try {
+                const response = await Axios.get(`${import.meta.env.VITE_BACKEND_URL}skills`)
+                
+                const selectedIds = includedSkills.map(skill => skill._id)
+                
+                const otherCategory = dataType === 'skills' ? 'interests' : 'skills'
+                const selectedOtherOptions = preSaveUserData?.[otherCategory] || []
+                const otherSelectedIds = selectedOtherOptions.map(skill => skill._id)
+                
+                const availableOptions = response.data.filter(skill => 
+                    !selectedIds.includes(skill._id) && !otherSelectedIds.includes(skill._id)
+                )
+                setExcludedSkills(availableOptions)
+            } catch (error) {
+                console.error("Error fetching skills: ", error)
+            }
         }
 
         fetchSkills()
-    }, [])
-
+    }, [preSaveUserData, includedSkills, dataType])
 
     useEffect(() => {
-        setPreSaveUserData({ ...preSaveUserData, [dataType]: [...includedSkills] })
-    }, [excludedSkills])
-
+        setPreSaveUserData(prev => ({ ...prev, [dataType]: [...includedSkills] }))
+    }, [includedSkills, dataType, setPreSaveUserData])
 
     const handleSkillRemove = (skill) => {
-        setExcludedSkills([...excludedSkills, skill])
+        setExcludedSkills(prev => [...prev, skill])
         setIncludedSkills(prevList => prevList.filter(thisSkill => thisSkill._id !== skill._id))
         console.log(`Removed ${skill.name}`)
     }
 
-
     const handleSkillAdd = (skill) => {
         setExcludedSkills(prevList => prevList.filter(thisSkill => thisSkill._id !== skill._id))
-        setIncludedSkills([...includedSkills, skill])
+        setIncludedSkills(prev => [...prev, skill])
         console.log(`Added ${skill.name}`)
     }
-
 
     return (
         <div className={keyValPairCss}>

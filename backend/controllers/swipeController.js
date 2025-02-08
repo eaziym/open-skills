@@ -81,12 +81,16 @@ const swipeAction = async (req, res) => {
         );
         currentUser.matches.push(swipedUser._id);
         swipedUser.matches.push(currentUser._id);
-        currentUser.notifications.push(
-          `🎉 You matched with @ ${swipedUser.username} !!!`
-        );
-        swipedUser.notifications.push(
-          `🎉 You matched with @ ${currentUser.username} !!!`
-        );
+
+        // Push notifications with the read status set to false
+        currentUser.notifications.push({
+          message: `🎉 You matched with @ ${swipedUser.username} !!!`,
+          read: false,
+        });
+        swipedUser.notifications.push({
+          message: `🎉 You matched with @ ${currentUser.username} !!!`,
+          read: false,
+        });
         await currentUser.save();
         await swipedUser.save();
         console.log("User got a match !");
@@ -105,7 +109,7 @@ const swipeAction = async (req, res) => {
     else {
       currentUser.rejected.push(swipedUser._id);
       await currentUser.save();
-      console.log("User rejected this pontential match !");
+      console.log("User rejected this potential match !");
       return res.status(200).json({
         message: `🚫 User Rejected potential match @ ${swipedUser.username} !`,
       });

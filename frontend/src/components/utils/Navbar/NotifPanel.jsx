@@ -1,6 +1,35 @@
 import NotificationItem from "./NotificationItem";
+import Axios from 'axios'
+import { useUser } from '../../utils/UserProvider'
+import { useAlert } from '../AlertProvider'
+import { useLoading } from '../LoadingProvider.jsx'
 
 export default function NotificationPanel({ userData, handleClick }) {
+    const { setUserData } = useUser()
+    const { setAlert } = useAlert()
+    const { setIsLoading } = useLoading()
+
+    const notifications = userData.notifications || []
+
+    async function markAllAsRead() {
+        setIsLoading(true)
+        try {
+            // Call the backend endpoint to mark all notifications as read.
+            // Adjust the URL and HTTP method as needed for your API.
+            const response = await Axios.patch(`${import.meta.env.VITE_BACKEND_URL}user/notifications/markAllRead`)
+            if (response.status === 200) {
+                // Update local state: set each notification's "read" property to true.
+                const updatedNotifications = notifications.map(notif => ({ ...notif, read: true }))
+                setUserData(prev => ({ ...prev, notifications: updatedNotifications }))
+            } else {
+                setAlert({ message: "Unable to mark notifications as read." })
+            }
+        } catch (error) {
+            console.error("Error marking notifications as read", error)
+            setAlert({ message: "Unable to mark notifications as read." })
+        }
+        setIsLoading(false)
+    }
 
     const blurStyle = {
         backdropFilter: 'blur(10px)',
@@ -34,8 +63,19 @@ export default function NotificationPanel({ userData, handleClick }) {
                         </div>
 
                         <div className="p-4 md:p-5">
+                            <div className="flex justify-between items-center mb-4">
+                                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-200">
+                                    Notifications
+                                </h2>
+                                <button 
+                                    onClick={markAllAsRead} 
+                                    className="text-blue-500 hover:underline text-sm"
+                                >
+                                    Mark All as Read
+                                </button>
+                            </div>
                             <ul className="my-4 space-y-3">
-                                {userData.notifications.map((item, index) => (
+                                {notifications.map((item, index) => (
                                     <NotificationItem key={index} item={item} />
                                 )).reverse()}
                             </ul>
