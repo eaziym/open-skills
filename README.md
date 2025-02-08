@@ -39,7 +39,7 @@ The original platform stopped at the matching stage, leaving users without a bui
 - **Matchmaking**: Find users with complementary skills.
 - **Skill Exchange**: Connect with others to teach and learn new skills.
 
-### Current Enhancements
+## Current Enhancements
 
 - Implemented bidirectional skill matching
 - Added real-time chat functionality
@@ -71,7 +71,7 @@ The original platform stopped at the matching stage, leaving users without a bui
 1. Once connected, you can find contact info in `matches` section, arrange a skill exchange session.
 2. Give feedback to us after the session to help improve the community.
 
-### Initial Setup for Testing
+## Initial Setup for Testing
 
 1. Populate skills database (run this curl command):
 
