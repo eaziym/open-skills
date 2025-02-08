@@ -17,6 +17,28 @@ export default function ViewProfile({ children }) {
     const { alert, setAlert } = useAlert()
     const { isLoading, setIsLoading } = useLoading()
     const { username } = useParams()
+    const [currentUser, setCurrentUser] = useState(null)
+
+    // Fetch the current logged in user's profile to get their skills and interests for highlighting.
+    useEffect(() => {
+      async function fetchCurrentUser() {
+        try {
+          const res = await Axios.get(`${import.meta.env.VITE_BACKEND_URL}user/profile`)
+          if (res.status === 200) {
+            const fetchedUser = res.data
+            // Transform skills and interests from objects to arrays of names.
+            // fetchedUser.skills = fetchedUser.skills.map((skill) => skill.name);
+            // fetchedUser.interests = fetchedUser.interests.map((interest) => interest.name);
+            console.log('Current user:', fetchedUser)
+            setCurrentUser(fetchedUser)
+          }
+        } catch (err) {
+          console.error('Error fetching current user profile:', err.message)
+        }
+      }
+      fetchCurrentUser()
+    }, [])
+
 
     useEffect(() => {
         console.log("username :" , username)
@@ -67,13 +89,14 @@ export default function ViewProfile({ children }) {
         console.log('Updated userData:', userData);
     }, [userData])
 
+    const isMatch = currentUser?.matches?.includes(userData.username);
 
     return (
         <div className="flex items-center justify-center w-full">
 
             <div className='flex flex-col my-5'>
 
-                <PageHeading>Your Match</PageHeading>
+                <PageHeading>{isMatch ? "Your Match" : "Profile"}</PageHeading>
 
                 <div className="w-full max-w-lg border-2 border-blue-600 dark:border-blue-500 rounded-lg shadow bg-slate-200 dark:bg-gray-900 mb-5">
                     <div className="flex flex-col items-center p-10">
@@ -96,7 +119,7 @@ export default function ViewProfile({ children }) {
                         <div className="flex flex-col items-center p-5">
                             {Object.keys(userData).map((myKey, itr) => {
                                 if (myKey === 'skills' || myKey === 'interests') {
-                                    return <SkillRow key={itr} dataType={myKey} dataVal={userData[myKey]} />
+                                    return <SkillRow key={itr} dataType={myKey} dataVal={userData[myKey]} currentUser={currentUser} />
                                 } else {
                                     return <DataRow key={itr} dataType={myKey} dataVal={userData[myKey]} />
                                 }

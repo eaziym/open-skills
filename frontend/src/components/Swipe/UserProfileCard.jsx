@@ -35,8 +35,8 @@ const UserProfileCard = ({ currProfile, currentUser, showNext }) => {
     // Helper function to decide the class based on a match
     const getHighlightClass = (item, myItems) => {
         return myItems && myItems.includes(item)
-            ? 'rounded-full bg-green-500 text-white px-4 py-2 text-sm mr-2 mb-2'
-            : 'rounded-full bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 text-black px-4 py-2 text-sm mr-2 mb-2';
+            ? 'rounded-full bg-green-600 text-white px-4 py-2 text-sm mr-2 mb-2 hover:bg-green-700'
+            : 'rounded-full bg-blue-400 text-gray-900 px-4 py-2 text-sm mr-2 mb-2 hover:bg-blue-300';
     };
 
     useEffect(() => {

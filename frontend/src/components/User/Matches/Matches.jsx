@@ -16,14 +16,17 @@ export default function Matches() {
       try {
         const response = await Axios.get(`${import.meta.env.VITE_BACKEND_URL}user/matches`)
         if (response.status === 200) {
-          console.log(response.data)
+          // Remove duplicates by username
+          const uniqueMatches = response.data.filter((user, index, self) =>
+            index === self.findIndex(u => u.username === user.username)
+          )
+          
           setAlert({
             message: "Fetch successful.",
             type: "success"
           })
-          setMatches(response.data)
-        }
-        else if(response.status === 201) {
+          setMatches(uniqueMatches)
+        } else if(response.status === 201) {
           setMatches([])
         }
       } catch (err) {
@@ -34,7 +37,6 @@ export default function Matches() {
       }
       setIsLoading(false)
     }
-
     getMatches()
   }, [])
 
