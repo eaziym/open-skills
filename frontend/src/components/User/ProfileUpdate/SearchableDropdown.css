@@ -13,6 +13,8 @@
     top: calc(100% + 5px); /* Position the dropdown below the input */
     left: 0;
     width: 100%;
+    max-height: 200px; /* Add max height */
+    overflow-y: auto; /* Add scrolling */
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -24,6 +26,29 @@
     visibility: hidden; /* Initially hide the dropdown */
     transition: opacity 0.2s, visibility 0.2s; /* Add transition effect */
     z-index: 999; /* Ensure the dropdown is on top */
+
+    /* Add custom scrollbar styling */
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+}
+
+/* Custom scrollbar for Webkit browsers */
+.options-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.options-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.options-list::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.options-list::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 .searchable-dropdown:focus-within .options-list {

@@ -1,17 +1,15 @@
 const mongoose = require("mongoose");
 
-const connectDB = async() =>{
-    const DB_NAME = 'SkillSwapDB'
-    const DB_URI = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.jspv37k.mongodb.net/${DB_NAME}?retryWrites=true&w=majority&appName=Cluster0`
-    
-    try{
-        const connectionInstance = await mongoose.connect(DB_URI)
-        console.log(`\nMONGO DB CONNECTED !!`);
-
-    }catch(err){
-        console.log(`MONGODB CONNECTION ERROR: ${err}`);
-        process.exit(1);
-    }
-}
+const connectDB = async () => {
+  const DB_NAME = "open-skills";
+  const DB_URI = `mongodb+srv://${process.env.DATABASE_USERNAME}:${process.env.DB_PASSWORD}@open-skills.iqwh0.mongodb.net/${DB_NAME}?retryWrites=true&w=majority&appName=open-skills`;
+  try {
+    const connectionInstance = await mongoose.connect(DB_URI);
+    console.log(`\nMONGO DB CONNECTED !!`);
+  } catch (err) {
+    console.log(`MONGODB CONNECTION ERROR: ${err}`);
+    process.exit(1);
+  }
+};
 
 module.exports = connectDB;
