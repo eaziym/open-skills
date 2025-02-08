@@ -2,17 +2,17 @@ require("dotenv").config();
 const express = require("express");
 const connectDB = require("./config/db");
 const app = express();
-const userRouter = require("./routes/userRouter");
-const homeRouter = require("./routes/homeRouter");
-const adminRouter = require("./routes/adminRouter");
-const swipeRouter = require("./routes/swipeRouter");
-const utilRouter = require("./routes/utilRouter");
 const cookieParser = require("cookie-parser");
-const PORT = process.env.PORT;
 const cors = require("cors");
+const PORT = process.env.PORT;
+const http = require("http");
+const server = http.createServer(app);
+const socketIO = require("socket.io");
 
+// Connect to DB
 connectDB();
 
+// Middleware
 app.use(express.json());
 app.use(cookieParser());
 app.use(
@@ -28,18 +28,41 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  console.log(`Incoming ${req.method} request to ${req.path}`);
+  next();
+});
+
+// Routes
+const userRouter = require("./routes/userRouter");
+const homeRouter = require("./routes/homeRouter");
+const adminRouter = require("./routes/adminRouter");
+const swipeRouter = require("./routes/swipeRouter");
+const utilRouter = require("./routes/utilRouter");
+
 app.use("/user", userRouter);
-
 app.use("/home", homeRouter);
-
 app.use("/swipe", swipeRouter);
-
-app.use("/admin", adminRouter); // For testing purposes  // can make a admin dashboard in future
-
+app.use("/admin", adminRouter);
 app.use("/", utilRouter);
-
 app.use("/uploads", express.static("uploads"));
 
-app.listen(PORT, () => {
-  console.log("server is running on ", PORT);
+// Attach socket.io to the HTTP server
+const io = new socketIO.Server(server, {
+  cors: {
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+  connectionStateRecovery: {
+    maxDisconnectionDuration: 2 * 60 * 1000, // 2 minutes
+    skipMiddlewares: true,
+  },
+});
+
+// Pass the io instance to the socket handler module
+require("./socket/chatSocketHandler")(io);
+
+server.listen(PORT, () => {
+  console.log("Server is running on ", PORT);
 });

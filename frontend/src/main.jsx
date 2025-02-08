@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
 import App from "./App.jsx";
 import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
@@ -12,7 +13,9 @@ import Matches from "./components/User/Matches/Matches.jsx";
 import ProfileUpdate from "./components/User/ProfileUpdate/ProfileUpdate.jsx"
 import ViewProfile from "./components/utils/ViewProfile/ViewProfile.jsx";
 import Swipe from "./components/Swipe/Swipe.jsx";
+import ChatPage from "./components/Chat/ChatPage.jsx";
 import Axios from 'axios';
+import { store } from "./redux/store";
 
 Axios.defaults.withCredentials = true;
 
@@ -61,6 +64,10 @@ const router = createBrowserRouter([
         element: <Swipe />
       },
       {
+        path: "/chat",
+        element: <ChatPage />
+      },
+      {
         path: "/:username",
         element: <ViewProfile />,
       }
@@ -69,5 +76,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
 );

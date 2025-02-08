@@ -27,7 +27,6 @@ async function getUniqueUsername() {
 const login = async (req, res) => {
   try {
     const allSkills = await Skill.find();
-
     const userExists = await User.findOne({ email: req.body.email });
     if (!userExists) {
       return res.status(404).send("User does not exist");
@@ -60,7 +59,10 @@ const login = async (req, res) => {
       });
       // console.log(`token : ${token}`)
       console.log("\nUser logged in successfully.\n");
+
+      // Include _id in the returned profile
       const profile = {
+        _id: userExists._id,
         fname: userExists.fname,
         lname: userExists.lname,
         username: userExists.username,
@@ -83,7 +85,7 @@ const login = async (req, res) => {
         secure: true,
         sameSite: "None",
       });
-      return res.status(400).json("Invalid user  OR  wrong username-password ");
+      return res.status(400).json("Invalid user OR wrong username-password ");
     }
   } catch (e) {
     res.clearCookie("token", {
@@ -162,6 +164,7 @@ const viewProfile = async (req, res) => {
     );
 
     const profile = {
+      _id: thisUser._id,
       fname: thisUser.fname,
       lname: thisUser.lname,
       username: thisUser.username,
@@ -171,6 +174,7 @@ const viewProfile = async (req, res) => {
       matches: matchNames,
       bio: thisUser.bio,
       notifications: thisUser.notifications,
+      profilePic: thisUser.profilePic,
     };
     res.status(200).json(profile);
   } catch (err) {
@@ -446,6 +450,24 @@ const markAllReadNotifications = async (req, res) => {
   }
 };
 
+// Updated controller to fetch any user's profile by their username.
+const getUserProfileById = async (req, res) => {
+  try {
+    // Use findOne by username instead of findById so you can use the username as the route parameter.
+    const user = await User.findOne({ username: req.params.id })
+      .select("_id fname lname username email skills interests profilePic")
+      .populate("skills", "name") // Add population for skill names
+      .populate("interests", "name"); // Add population for interest names
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json(user);
+  } catch (err) {
+    console.error("Error fetching user profile:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 module.exports = {
   registerUser,
   viewProfile,
@@ -459,4 +481,5 @@ module.exports = {
   uploadProfilePic,
   upload,
   markAllReadNotifications,
+  getUserProfileById,
 };

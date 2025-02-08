@@ -67,6 +67,9 @@ const userSchema = new mongoose.Schema(
     profilePic: {
       type: String,
     },
+    socket_id: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

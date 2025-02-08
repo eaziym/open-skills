@@ -33,6 +33,9 @@ export default function Profile() {
                         ...userData,
                         ...response.data
                     })
+                    if (response.data._id) {
+                        window.localStorage.setItem("user_id", response.data._id)
+                    }
                 } else if (response.status === 300) {
                     console.log('Token is invalid or expired.')
                     setAlert({

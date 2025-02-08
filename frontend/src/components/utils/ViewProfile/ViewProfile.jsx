@@ -7,6 +7,10 @@ import { useAlert } from '../../utils/AlertProvider'
 import SkillRow from './SkillRow'
 import PageHeading from '../../utils/PageHeading'
 import { useLoading } from '../../utils/LoadingProvider'
+import { useDispatch } from 'react-redux'
+import { SetCurrentConversation } from '../../../redux/slices/conversation'
+import { SelectConversation } from '../../../redux/slices/app'
+import { useSocket } from "../../../context/SocketContext"
 
 Axios.defaults.withCredentials = true
 
@@ -18,6 +22,8 @@ export default function ViewProfile({ children }) {
     const { isLoading, setIsLoading } = useLoading()
     const { username } = useParams()
     const [currentUser, setCurrentUser] = useState(null)
+    const dispatch = useDispatch()
+    const socket = useSocket()
 
     // Fetch the current logged in user's profile to get their skills and interests for highlighting.
     useEffect(() => {
@@ -49,33 +55,22 @@ export default function ViewProfile({ children }) {
                 navigate(`/${username}`)
             }
             try {
-                const response = await Axios.get(`${import.meta.env.VITE_BACKEND_URL}${username}`, {
-                    username: username
-                })
-
+                const response = await Axios.get(`${import.meta.env.VITE_BACKEND_URL}user/profile/${username}`);
+                
                 if (response.status === 200) {
-                    console.log('Profile fetched successfully:', response.data)
-                    setUserData({
-                        ...userData,
-                        ...response.data
-                    })
+                    console.log('Profile fetched successfully:', response.data);
+                    setUserData(response.data);
                 } else {
-                    console.log('Fetch not working')
+                    console.log('Fetch not working');
                     setAlert({
                         message: "Couldn't fetch profile."
-                    })
+                    });
                 }
-                setIsLoading(false)
-            } catch (error) {
-                console.error('Fetching profile failed:', error.message)
+            } catch (err) {
+                console.error('Error fetching recipient profile:', err.message);
                 setAlert({
-                    message: "Fetching profile failed",
-                    type: "warning"
-                })
-                setUserData({ ...defaultUser })
-                console.log('Redirecting to home page.')
-                navigate('/home')
-                setIsLoading(false)
+                    message: "Couldn't fetch profile."
+                });
             }
             setIsLoading(false)
         }
@@ -90,6 +85,35 @@ export default function ViewProfile({ children }) {
     }, [userData])
 
     const isMatch = currentUser?.matches?.includes(userData.username);
+    console.log("isMatch:", isMatch);
+    console.log("currentUser:", currentUser); // me
+    console.log("userData:", userData); // other user
+
+    const handleStartChat = () => {
+        console.log("Starting chat with:", {
+            from: currentUser._id,
+            to: userData._id
+        });
+        socket.emit("start_chat", { from: currentUser._id, to: userData._id }, (response) => {
+            if (response.error) {
+                console.error("Error starting chat:", response.error);
+                return;
+            }
+            // Assume response is a full conversation object with a valid _id
+            const conversationData = response;
+            
+            // Dispatch actions to update the conversation in your redux store.
+            dispatch(SelectConversation({
+                chat_type: 'direct_chat',
+                room_id: conversationData._id,
+                conversation: conversationData
+            }));
+            dispatch(SetCurrentConversation(conversationData));
+            
+            // Now navigate to the chat page.
+            navigate("/chat", { state: { matchedUser: userData } });
+        });
+    };
 
     return (
         <div className="flex items-center justify-center w-full">
@@ -114,11 +138,21 @@ export default function ViewProfile({ children }) {
                             <h1 className="text-xl font-bold text-blue-600 dark:text-blue-500">
                                 @{userData.username.toLowerCase()}
                             </h1>
+                            {isMatch && (
+                                <button
+                                    onClick={handleStartChat}
+                                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                >
+                                    Have a Chat
+                                </button>
+                            )}
                         </div>
 
                         <div className="flex flex-col items-center p-5">
                             {Object.keys(userData).map((myKey, itr) => {
-                                if (myKey === 'skills' || myKey === 'interests') {
+                                if (myKey === 'profilePic') {
+                                    return null;
+                                } else if (myKey === 'skills' || myKey === 'interests') {
                                     return <SkillRow key={itr} dataType={myKey} dataVal={userData[myKey]} currentUser={currentUser} />
                                 } else {
                                     return <DataRow key={itr} dataType={myKey} dataVal={userData[myKey]} />

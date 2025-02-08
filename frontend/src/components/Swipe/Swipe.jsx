@@ -110,7 +110,7 @@ export default function Swipe() {
                 potentials.length > 0 && currentUser ?
                     <UserProfileCard currProfile={currProfile} currentUser={currentUser} showNext={showNext} />
                     :
-                    <div className="flex items-center justify-center h-screen text-center text-gray-500 dark:text-gray-400 py-4">You have run out of potential matches ! Come again later or Update you skills & interests.</div>
+                    <div className="flex items-center justify-center h-screen text-center text-gray-500 dark:text-gray-400 py-4">You have run out of potential matches! Come again later or update your skills & interests.</div>
             }
         </div>
     )

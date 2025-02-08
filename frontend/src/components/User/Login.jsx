@@ -8,7 +8,6 @@ import { useAlert } from '../utils/AlertProvider';
 import { defaultUser } from '../utils/defaultUser';
 import { useLoading } from '../utils/LoadingProvider';
 import LoginImg from '../../assets/LoginImg';
-
 Axios.defaults.withCredentials = true;
 
 
@@ -37,6 +36,9 @@ const Login = () => {
                     type: 'success'
                 })
                 setUserData({ ...defaultUser, ...response.data })
+                if (response.data._id) {
+                    window.localStorage.setItem("user_id", response.data._id);
+                  }
                 navigate("/user/profile")
             }
 

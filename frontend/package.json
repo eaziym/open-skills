@@ -13,12 +13,18 @@
     "node": "20.x"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.5.1",
     "axios": "^1.6.8",
     "jwt-decode": "^4.0.0",
     "ldrs": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.23.1"
+    "react-persist": "^1.0.2",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^6.23.1",
+    "redux-persist": "^6.0.0",
+    "socket.io-client": "^4.8.1",
+    "uuid": "^11.0.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

@@ -13,12 +13,14 @@ const {
   uploadProfilePic,
   markAllReadNotifications,
   upload,
+  getUserProfileById,
 } = require("../controllers/userController");
 const { authCheck } = require("../middlewares/authCheck");
 
 router.get("/matches", authCheck, getMatches);
 router.get("/notifications", authCheck, getNotifications);
 router.get("/profile", authCheck, viewProfile);
+router.get("/profile/:id", authCheck, getUserProfileById);
 
 router.put("/profile-update", authCheck, editUserProfile);
 router.put("/skills-update", authCheck, updateUserSkills);

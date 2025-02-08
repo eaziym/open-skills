@@ -23,7 +23,8 @@ export default function SkillRow({ dataType, dataVal, currentUser }) {
                 {items.map((item, key) => {
                     const highlightClass = userCompareItems.includes(item)
                     ? "rounded-full bg-green-600 text-white px-4 py-2 text-sm mr-2 mb-2 hover:bg-green-700"
-                    : "rounded-full bg-blue-400 text-gray-900 px-4 py-2 text-sm mr-2 mb-2 hover:bg-blue-300";                    return <label key={key} className={highlightClass}>{item}</label>
+                    : "rounded-full bg-blue-400 text-gray-900 px-4 py-2 text-sm mr-2 mb-2 hover:bg-blue-300";                    
+                    return <label key={key} className={highlightClass}>{item}</label>
                 })}
             </div>
         </div>
