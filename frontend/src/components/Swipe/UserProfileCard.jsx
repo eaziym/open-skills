@@ -5,13 +5,16 @@ import { useAlert } from '../utils/AlertProvider'
 import { useLoading } from '../utils/LoadingProvider';
 import { useNavigate } from 'react-router-dom'
 
-const UserProfileCard = ({ currProfile, showNext }) => {
+const UserProfileCard = ({ currProfile, currentUser, showNext }) => {
 
     const [isAccepted, setIsAccepted] = useState('')
     const { alert, setAlert } = useAlert()
     const [id, setid] = useState(Date.now());
     const { setIsLoading } = useLoading()
     const navigate = useNavigate()
+
+    // Use the uploaded profile pic if available, else generate one based on username
+    const profilePic = currProfile.profilePic || `https://i.pravatar.cc/150?u=${currProfile.username}`;
 
     function handleAccept() {
         console.log("Handling acceptance.")
@@ -28,6 +31,13 @@ const UserProfileCard = ({ currProfile, showNext }) => {
     function handleClick() {
         navigate(`/${currProfile.username}`)
     }
+
+    // Helper function to decide the class based on a match
+    const getHighlightClass = (item, myItems) => {
+        return myItems && myItems.includes(item)
+            ? 'rounded-full bg-green-500 text-white px-4 py-2 text-sm mr-2 mb-2'
+            : 'rounded-full bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 text-black px-4 py-2 text-sm mr-2 mb-2';
+    };
 
     useEffect(() => {
         const sendResults = async () => {
@@ -70,8 +80,8 @@ const UserProfileCard = ({ currProfile, showNext }) => {
                 <div className="flex flex-col items-center p-5">
                     <img
                         className="w-24 h-24 mb-3 rounded-full shadow-lg"
-                        src={maleAvatar}
-                        alt="Default avatar"
+                        src={profilePic}
+                        alt="Profile picture"
                     />
 
                     <button onClick={handleClick} className="mb-1 text-xl font-medium text-blue-600 dark:text-blue-500">{`@ ${currProfile.username.toLowerCase()}`}</button>
@@ -89,7 +99,7 @@ const UserProfileCard = ({ currProfile, showNext }) => {
                         <span className="text-sm text-gray-500 mb-3">Skills</span>
                         <div className="flex flex-wrap justify-left">
                             {currProfile.skills.map((element, key) => {
-                                return <label key={key} className='rounded-full text-black bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium text-sm px-4 py-2 text-center me-2 mb-2'>{element}</label>
+                                return <label key={key} className={getHighlightClass(element, currentUser?.skills)}>{element}</label>
                             })}
                         </div>
                     </div>
@@ -98,7 +108,7 @@ const UserProfileCard = ({ currProfile, showNext }) => {
                         <span className="text-sm text-gray-500 mb-3">Interests</span>
                         <div className="flex flex-wrap justify-left">
                             {currProfile.interests.map((element, key) => {
-                                return <label key={key} className='rounded-full text-black bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium text-sm px-4 py-2 text-center me-2 mb-2'>{element}</label>
+                                return <label key={key} className={getHighlightClass(element, currentUser?.interests)}>{element}</label>
                             })}
                         </div>
                     </div>

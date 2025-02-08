@@ -16,4 +16,6 @@ router.get(
   adminController.setRandomSkillsAndMatches
 );
 
+router.post("/generate/users", adminController.generateFakeUsers);
+
 module.exports = router;

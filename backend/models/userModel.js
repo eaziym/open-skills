@@ -1,56 +1,74 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema(
+  {
     fname: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     lname: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     email: {
-        type: String,
-        required: true,
-        unique: true
+      type: String,
+      required: true,
+      unique: true,
     },
     password: {
-        type: String,
-        required: true,
-        minlength: 6
+      type: String,
+      required: true,
+      minlength: 6,
     },
     bio: {
-        type: String
+      type: String,
     },
     username: {
-        type: String,
-        require: true,
-        minlength: 4
+      type: String,
+      require: true,
+      minlength: 4,
     },
-    skills: [{
+    skills: [
+      {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Skill'
-    }],
-    interests: [{
+        ref: "Skill",
+      },
+    ],
+    interests: [
+      {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Skill'
-    }],
-    matchRequests: [{
+        ref: "Skill",
+      },
+    ],
+    matchRequests: [
+      {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }],
-    matches: [{
+        ref: "User",
+      },
+    ],
+    matches: [
+      {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }],
-    rejected: [{
+        ref: "User",
+      },
+    ],
+    rejected: [
+      {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }],
-    notifications: [{
-        type: String
-    }]
-}, {timestamps: true})
+        ref: "User",
+      },
+    ],
+    notifications: [
+      {
+        type: String,
+      },
+    ],
+    profilePic: {
+      type: String,
+    },
+  },
+  { timestamps: true }
+);
 
-const User = mongoose.model('User', userSchema)
-module.exports = User
+const User = mongoose.model("User", userSchema);
+module.exports = User;

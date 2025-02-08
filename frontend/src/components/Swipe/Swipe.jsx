@@ -12,9 +12,30 @@ export default function Swipe() {
     const [currProfile, setCurrProfile] = useState({ ...defaultUser })
     const [potentials, setPotentials] = useState([])
     const [index, setIndex] = useState(-1)
+    const [currentUser, setCurrentUser] = useState(null)
     const navigate = useNavigate()
     const { alert, setAlert } = useAlert()
     const { isLoading, setIsLoading} = useLoading()
+
+    // Fetch the current logged in user's profile and transform skills/interests to arrays of strings.
+    useEffect(() => {
+        async function fetchCurrentUser() {
+            try {
+                const res = await Axios.get(`${import.meta.env.VITE_BACKEND_URL}user/profile`);
+                if (res.status === 200) {
+                    const fetchedUser = res.data;
+                    // Transform skills and interests from objects to arrays of names.
+                    fetchedUser.skills = fetchedUser.skills.map((skill) => skill.name);
+                    fetchedUser.interests = fetchedUser.interests.map((interest) => interest.name);
+                    setCurrentUser(fetchedUser);
+                }
+            } catch (err) {
+                console.error("Error fetching current user profile:", err.message);
+            }
+        }
+
+        fetchCurrentUser();
+    }, []);
 
     function showNext() {
         console.log(`index = ${index}, list length = ${potentials.length}`)
@@ -86,8 +107,8 @@ export default function Swipe() {
     return (
         <div className="flex items-center justify-center">
             {
-                potentials.length > 0 ?
-                    <UserProfileCard currProfile={currProfile} showNext={showNext} />
+                potentials.length > 0 && currentUser ?
+                    <UserProfileCard currProfile={currProfile} currentUser={currentUser} showNext={showNext} />
                     :
                     <div className="flex items-center justify-center h-screen text-center text-gray-500 dark:text-gray-400 py-4">You have run out of potential matches ! Come again later or Update you skills & interests.</div>
             }

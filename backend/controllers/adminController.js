@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const Skill = require("../models/skillModel");
+const { faker } = require("@faker-js/faker");
 
 const showAllUsers = async (req, res) => {
   try {
@@ -189,6 +190,67 @@ const addSkillsBulk = async (req, res) => {
   }
 };
 
+const generateFakeUsers = async (req, res) => {
+  try {
+    const { count } = req.body;
+    const allSkills = await Skill.find();
+
+    if (allSkills.length < 20) {
+      return res.status(400).json({
+        message: "Need at least 20 skills in database to generate users",
+      });
+    }
+
+    const fakeUsers = [];
+    for (let i = 0; i < count; i++) {
+      const userSkills = [];
+      const userInterests = [];
+
+      // Select 10 random skills
+      while (userSkills.length < 10) {
+        const skill = allSkills[Math.floor(Math.random() * allSkills.length)];
+        if (!userSkills.includes(skill._id)) {
+          userSkills.push(skill._id);
+        }
+      }
+
+      // Select 10 interest different from skills
+      while (userInterests.length < 10) {
+        const interest =
+          allSkills[Math.floor(Math.random() * allSkills.length)]._id;
+        if (
+          !userSkills.includes(interest) &&
+          !userInterests.includes(interest)
+        ) {
+          userInterests.push(interest);
+        }
+      }
+
+      fakeUsers.push({
+        fname: faker.person.firstName(),
+        lname: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: "tesT123456@", // Default password
+        username: faker.internet.userName().replace(/[^a-zA-Z0-9]/g, ""),
+        bio: faker.lorem.sentence(),
+        skills: userSkills,
+        interests: userInterests,
+      });
+    }
+
+    const createdUsers = await User.insertMany(fakeUsers);
+    res.status(201).json({
+      message: `Created ${count} fake users`,
+      users: createdUsers,
+    });
+  } catch (err) {
+    res.status(500).json({
+      error: err.message,
+      stack: err.stack,
+    });
+  }
+};
+
 module.exports = {
   showAllSkills,
   showAllUsers,
@@ -198,4 +260,5 @@ module.exports = {
   getAUser,
   setRandomSkillsAndMatches,
   addSkillsBulk,
+  generateFakeUsers,
 };
