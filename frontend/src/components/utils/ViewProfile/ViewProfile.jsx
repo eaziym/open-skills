@@ -73,10 +73,25 @@ export default function ViewProfile({ children }) {
 
             <div className='flex flex-col my-5'>
 
-                <PageHeading>{`@ ${userData.username.toLowerCase()}`}</PageHeading>
+                <PageHeading>Your Match</PageHeading>
 
                 <div className="w-full max-w-lg border-2 border-blue-600 dark:border-blue-500 rounded-lg shadow bg-slate-200 dark:bg-gray-900 mb-5">
                     <div className="flex flex-col items-center p-10">
+
+                    <div className="flex flex-col items-center mb-5">
+                            <img
+                                className="w-24 h-24 rounded-full shadow-lg mb-2"
+                                src={
+                                    userData.profilePic
+                                        ? userData.profilePic
+                                        : `https://i.pravatar.cc/150?u=${userData.username}`
+                                }
+                                alt="Profile picture"
+                            />
+                            <h1 className="text-xl font-bold text-blue-600 dark:text-blue-500">
+                                @{userData.username.toLowerCase()}
+                            </h1>
+                        </div>
 
                         <div className="flex flex-col items-center p-5">
                             {Object.keys(userData).map((myKey, itr) => {
