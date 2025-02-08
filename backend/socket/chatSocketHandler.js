@@ -1,6 +1,5 @@
 const User = require("../models/userModel");
 const OneToOneMessage = require("../models/oneToOneMessageModel");
-const File = require("../models/fileModel");
 const { v4: uuidv4 } = require("uuid");
 module.exports = (io) => {
   io.on("connection", async (socket) => {
@@ -198,13 +197,13 @@ module.exports = (io) => {
         try {
           const users = await User.find({
             _id: { $ne: socket.user._id }, // Exclude current user
-          }).select("firstName lastName _id status");
+          }).select("fname lname _id status");
 
           callback({
             users: users.map((user) => ({
               _id: user._id,
-              firstName: user.firstName,
-              lastName: user.lastName,
+              firstName: user.fname,
+              lastName: user.lname,
               status: user.status,
             })),
           });
@@ -228,7 +227,7 @@ module.exports = (io) => {
               $size: 2,
             },
           })
-            .populate("messages.from", "firstName lastName")
+            .populate("messages.from", "fname lname")
             .sort({ "messages.createdAt": -1 })
             .limit(50);
 
@@ -242,7 +241,7 @@ module.exports = (io) => {
             message: msg.text,
             from:
               msg.from._id.toString() === userId
-                ? `${msg.from.firstName} ${msg.from.lastName}`
+                ? `${msg.from.fname} ${msg.from.lname}`
                 : "You",
             timestamp: msg.createdAt,
           }));
