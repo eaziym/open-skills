@@ -28,11 +28,7 @@ The original platform stopped at the matching stage, leaving users without a bui
   - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
-  - [Contributing](#contributing)
-  - [Future Plans](#future-plans)
   - [Contributors](#contributors)
-  - [License](#license)
-  - [Contact](#contact)
 
 ## Original Features
 
