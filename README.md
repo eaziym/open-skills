@@ -110,7 +110,15 @@ The original platform stopped at the matching stage, leaving users without a bui
 
 ### Testing the Chat Feature
 
-![Chat Interface](./frontend/src/assets/readme/chat.gif) 3. Register two different accounts (doesn't have to be real emails) 4. Open two browser windows and log in with each account 5. Match the users through the swipe interface 6. Start chatting in real-time (if for some reason the app doesn't load, refresh the page - may need to fix the redux state issue)
+![Chat Interface](./frontend/src/assets/readme/chat.gif)
+
+3. Register two different accounts (doesn't have to be real emails)
+
+4. Open two browser windows and log in with each account
+
+5. Match the users through the swipe interface
+
+6. Start chatting in real-time (if for some reason the app doesn't load, refresh the page - may need to fix the redux state issue)
 
 ## Future Features
 
